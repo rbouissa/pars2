@@ -1,25 +1,55 @@
-NAME = parsing
+CFLAGS	= -Wall -Wextra -Werror -fsanitize=address -g
+LIBC	= ar -rc
+RM		= rm -f
+NAME	= minishell
+SRC		= main.c \
+			ft_split.c \
+			libft_helpers.c \
+			builtins/ft_cd.c \
+			builtins/ft_echo.c \
+			builtins/ft_env.c \
+			builtins/ft_pwd.c \
+			builtins/ft_unset.c \
+			list_utils.c \
+			builtins/ft_export.c \
+			builtins/ft_error.c \
+			builtins/ft_exit.c \
+			execution/pipes.c \
+			execution/heredoc.c \
+			add_to_list.c \
+			test_split.c \
+			creat_list_command.c \
+			execution/signals.c \
+			execution/free_fct.c \
+			execution/builtins_execution.c \
+			execution/chilld_exec.c \
+			execution/parent_exec.c \
+			execution/exec_cmd.c \
+			freed.c \
+			quotes.c\
+			new_env.c\
+			creat_list_command1.c\
+			creat_list_command2.c\
+			creat_commad_list3.c\
+			creat_command_list4.c\
+			test_split1.c\
+			test_split2.c\
+			new_env1.c\
+			new_env2.c\
 
+OBJ	= $(SRC:.c=.o)
 
-FLAGS = -Wall -Werror -Wextra -g -fsanitize=address
-RM = rm -f
+all: $(NAME)
 
-SRC = main.c libft_helpers.c test_split.c list_utils.c add_to_list.c creat_list_command.c ft_split.c 
-OBJ = $(SRC:.c=.o)
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS)  $(OBJ) -o $(NAME)  -lreadline -L /Users/rbouissa/goinfre/homebrew/opt/readline/lib -I /Users/rbouissa/goinfre/homebrew/opt/readline/include 
 
+clean:
+		$(RM) $(OBJ)
 
-all:	$(NAME) 
+fclean: clean
+		$(RM) $(NAME) 
 
-$(NAME):	$(OBJ) $(OBJ_S)
-	cc  $(FLAGS) -lreadline $(OBJ) -o $(NAME)
+re:	fclean all
 
-
-clean:	
-	$(RM) $(OBJ) 
-
-fclean:	clean
-	$(RM) $(NAME) 
-
-re: fclean all
-
-.PHONY: all clean fclean re bonus
+b: all clean

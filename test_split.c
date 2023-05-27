@@ -1,173 +1,42 @@
 
+#include "minishell.h"
 
-#include "parsing.h"
-
-int	find_spliter(char s, char *sp)
+t_list	*our_list(t_nor_sp **norm, t_list *s, char *str)
 {
-	int	i;
-	int	j;
-
-	j = 0;
-	i = 0;
-	while (sp[i])
+	while (str[(*norm)->i])
 	{
-		if (s == sp[i])
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	my_token(char *s)
-{
-	int	token;
-
-    token = 0;
-	if (!ft_strcmp(s, "|"))
-		token = 5;
-	else if (!ft_strcmp(s, ">"))
-		token = 2;
-	else if (!ft_strcmp(s, "<"))
-		token = 3;
-	else if (!ft_strcmp(s, "<<"))
-		token = 4;
-	else if (!ft_strcmp(s, ">>"))
-		token = 10;
-	else if (!ft_strcmp(s, "||"))
-		token = 6;
-	return (token);
-}
-
-t_list	*ft_split_them(char *str)
-{
-	t_list	*s;
-	int		i;
-	char	*node;
-	char	*st;
-	int		j;
-	int		k;
-	int		check;
-	int		token;
-	int		quotes;
-
-	check = 0;
-	quotes = 0;
-	j = 0;
-	i = 0;
-	while (str[i])
-	{
-		k = i;
-        //alocation for "quotes string"
-		if (str[i] == 34 || str[i] == 39)
+		(*norm)->k = (*norm)->i;
+		(*norm)->i = count_nosplit(norm, str);
+		if ((*norm)->i - (*norm)->k != 0)
 		{
-			quotes = str[i];
-			i++;
-			while (str[i] && (str[i+1] != quotes))
-				i++;
+			fill_struct(norm, &s, str);
+			free((*norm)->node);
+			(*norm)->node = NULL;
 		}
 		else
 		{
-			//for alocation
-			while (str[i] && !find_spliter(str[i], "|<> \t"))
-				i++;
-		}
-		//if don't find the spliter in the front
-		if (i - k != 0)
-		{
-			//the alocate
-			node = malloc(i - k + 1);
-			i = k;
-			j = 0;
-			if (str[i] == 34 || str[i] == 39)
+			(*norm)->k = (*norm)->i;
+			(*norm)->j = 0;
+			(*norm)->j = count_spl(norm, str);
+			if ((*norm)->j != 0)
 			{
-				quotes = str[i];
-				//node[j] = str[i];
-				while (str[++i] && (str[i] != quotes))
-				{
-					node[j] = str[i];
-					j++;
-				}
-                i++;
-			}
-			//fill our node
-			while (str[i] && !find_spliter(str[i], "|<> \t"))
-			{
-				node[j] = str[i];
-				j++;
-				i++;
-			}
-			node[j] = 0;
-			//to be here just on time for creat the frist node
-			if (check == 0)
-			{
-				s = ft_lstnew(node, 0);
-				check = 1;
-			}
-			//her for the rest
-			else
-				ft_lstadd_back(&s, ft_lstnew(node, 0));
-		}
-		else
-		{
-			k = i;
-			j = 0;
-			while (str[i] && find_spliter(str[i], "|<> \t"))
-			{
-				if (find_spliter(str[i], "|<>"))
-					j++;
-				i++;
-			}
-			if (j != 0)
-			{
-				st = malloc(j + 1);
-				j = 0;
-				i = k;
-				while (str[i] && find_spliter(str[i], "|<> \t"))
-				{
-					if (find_spliter(str[i], "|<>"))
-					{
-						st[j] = str[i];
-						j++;
-                        i++;
-                        if(str[i]==str[i-1])
-                        {
-                            st[j] = str[i];
-                            i++;
-                            j++;
-                        }
-                        break;
-					}
-					i++;
-				}
-				st[j] = 0;
-				if (check == 0)
-				{
-					token = my_token(st);
-					s = ft_lstnew(st, token);
-					check = 1;
-				}
-				else
-				{
-					token = my_token(st);
-					ft_lstadd_back(&s, ft_lstnew(st, token));
-				}
+				fill_struct2(norm, &s, str);
+				free((*norm)->st);
+				(*norm)->st = NULL;
 			}
 		}
 	}
 	return (s);
 }
 
-// int	main(int argc, char **argv)
-// {
-// 	t_list	*s;
-// 	int		i;
+t_list	*ft_split_them(char *str)
+{
+	t_list		*s;
+	t_nor_sp	*norm;
 
-// 	s = ft_split_them(argv[1]);
-// 	i = 0;
-// 	while (s)
-// 	{
-// 		printf("%s->>>>   ", s->data);
-//         printf("%d\n", s->token);
-// 		s = s->next;
-// 	}
-// }
+	norm = norm_sp();
+	s = NULL;
+	s = our_list(&norm, s, str);
+	free(norm);
+	return (s);
+}

@@ -1,6 +1,43 @@
 
 
-#include "parsing.h"
+#include "minishell.h"
+
+t_mini	*ft_add_new(char *var, char *value, int valid)
+{
+	t_mini	*node;
+
+	node = malloc(sizeof(t_mini));
+	if (!node)
+		return (NULL);
+	node->data_var = var;
+	node->data_val = value;
+	node->valid = valid;
+	node->next = NULL;
+	return (node);
+}
+
+void	add_back_lst(t_mini **lst, t_mini *new) 
+{
+	t_mini	*ptr;
+
+	if (lst)
+	{
+		if (*lst)
+		{
+			ptr = last_lst(*lst);
+			ptr->next = new;
+		}
+		else
+			*lst = new;
+	}
+}
+
+t_mini	*last_lst(t_mini *a)
+{
+	while (a->next)
+		a = a->next;
+	return (a);
+}
 
 struct s_list	*ft_lstnew(char *content, int t)
 {
@@ -83,7 +120,7 @@ void	ft_lstadd_back_new(t_cmd **lst, t_cmd *new)
 			*lst = new;
 	}
 }
-t_cmd	*ft_lstnew_new(char **content, int t ,int k,int p, char **her,int t_her)
+t_cmd	*ft_lstnew_new(char **content, int t ,int k, char **her,int t_her)
 {
 	t_cmd	*node;
 
@@ -94,7 +131,6 @@ t_cmd	*ft_lstnew_new(char **content, int t ,int k,int p, char **her,int t_her)
 	node->cmd = content;
 	node->infile = t;
     node->outfile = k;
-    node->double_file=p;
     node->herdoc = her;
     node->herdoc_token=t_her;
 	node->next = NULL;

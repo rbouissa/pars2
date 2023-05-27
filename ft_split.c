@@ -6,15 +6,12 @@
 /*   By: rbouissa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 18:10:01 by rbouissa          #+#    #+#             */
-/*   Updated: 2023/04/13 20:53:32 by rbouissa         ###   ########.fr       */
+/*   Updated: 2023/05/26 16:35:17 by rbouissa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include "minishell.h"
+
 
 static int	count_tab(char *s, char c)
 {
